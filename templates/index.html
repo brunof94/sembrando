@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+{% if usuarios|length > 0 %}
+<table class="table table-striped">
+    <tr>
+        <td>ID</td>
+        <td>Nombre</td>
+        <td>Pass</td>
+    </tr>
+    {% for usuario in usuarios: %}
+    <tr>
+        <td>{{ usuario[0] }}</td>
+        <td>{{ usuario[1] }}</td>
+        <td>{{ usuario[2] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% if recetas|length> 0 %}
+<table class="table table-striped">
+    <tr>
+        <td>ID</td>
+        <td>Nombre</td>
+        <td>Puntuacion</td>
+        <td>Descripcion</td>
+    </tr>
+    {% for receta in recetas: %}
+    <tr>
+        <td>{{ receta[0] }}</td>
+        <td>{{ receta[1] }}</td>
+        <td>{{ receta[3] }}</td>
+        <td>{{ receta[4] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}
