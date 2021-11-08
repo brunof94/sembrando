@@ -3,6 +3,33 @@
 {% block content %}
 
 
+{% if content == "login" %}
+<form class="row g-3" method="post" action="/" enctype="multipart/form-data">
+  <div class="col-auto">
+    <label for="username" class="visually-hidden">Email</label>
+    <input name="username" type="text"  class="form-control" id="username" placeholder="Nombre de usuario" >
+  </div>
+  <div class="col-auto">
+    <label for="password" class="visually-hidden">Password</label>
+    <input name="password" type="password" class="form-control" id="password" placeholder="Contraseña">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary mb-3">Ingresar</button>
+  </div>
+</form>
+{% endif %}
+
+{% if content == "logged"%}
+<div>
+    <h1>Bienvenido {{user[0][1]}}</h1>
+</div>
+{% endif %}
+{% if content == "error" %}
+<div>
+    <h1 style="color:red">{{error}}</h1>
+</div>
+{% endif %}
+
 {% if usuarios|length > 0 %}
 <table class="table table-striped">
     <tr>

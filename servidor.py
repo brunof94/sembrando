@@ -1,18 +1,40 @@
-from flask import Flask, request, jsonify, render_template, Markup, flash
+from flask import Flask, request, jsonify, render_template, session
 from datos.modelos import usuario, recetas
 
 app = Flask(__name__)
+app.secret_key = ".dasfgjhaslfgñdojuuiriuerr"
 valorExito = 200
 valorYaExiste = 201
 valorFaltanDatos = 202
 valorNoEsJson = 203
 valorNoEncontrado = 204
 
-@app.route("/")
+@app.route("/", methods=['GET','POST'])
 def index():
-    #return app.send_static_file("base.html")
-    return render_template("index.html")
+    if request.method == 'GET':
+        return render_template("index.html", content = "login")
+    if request.method == 'POST':
+        _nombre = request.form.get('username')
+        _clave = request.form.get('password')
 
+        _datosUsuario = usuario.obtenerUsuario(_nombre)
+        print(type(_datosUsuario))
+        if len(_datosUsuario) == 0:
+            return render_template("index.html", content = "error", error = "Usuario no encontrado")
+        elif _clave == _datosUsuario[0][2]:
+            return render_template("index.html", content = "logged", user = _datosUsuario)
+        else:
+            return render_template("index.html", content="error", error=f"Contraseña incorrecta")
+
+
+@app.route("/login", methods=['POST'])
+def login():
+    data = request.form
+    print(data['username'])
+    print(data['password'])
+    _usuario = usuario.obtenerUsuario(data)
+    print(_usuario)
+    return "ok", 200
 
 
 #region endpoint usuario
@@ -33,13 +55,13 @@ def crearUsuario():
 @app.route('/usuarios', methods=['GET'])
 def obtenerUsuarios():
     datosUsuario = request.get_json()
-    if type(datosUsuario) != "dict":
+    if datosUsuario is not dict:
         return render_template("index.html", usuarios = usuario.obtenerUsuarios())
     else:
         if 'nombre' in datosUsuario:
             return jsonify(usuario.obtenerUsuario(datosUsuario['nombre'])), 200
         else:
-            return "No hay nombre", 200
+            return "No se encotró", 200
 
 
 
