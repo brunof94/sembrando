@@ -23,7 +23,7 @@ CREATE TABLE ingredientes(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 nombre VARCHAR(20) UNIQUE,
 foto BLOB,
-descrpicion VARCHAR(50)
+descripcion VARCHAR(50)
 )
 '''
 

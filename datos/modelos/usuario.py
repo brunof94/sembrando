@@ -10,7 +10,14 @@ def obtenerUsuario(nombre):
     bd = BaseDeDatos()
     return bd.ejecutar_sql(obtenerUsuarioSql)
 
+def obtenerUsuarioId(id):
+    obtenerUsuarioSqlId = f"""
+        SELECT id, nombre, clave 
+        FROM usuarios 
+        WHERE id = '{id}'"""
 
+    bd = BaseDeDatos()
+    return bd.ejecutar_sql(obtenerUsuarioSqlId)
 
 def crearUsuario(nombre, clave):
 

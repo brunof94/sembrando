@@ -3,7 +3,7 @@
 {% block content %}
 
 
-{% if content == "login" %}
+{% if content == "login" or content == "error" %}
 <form class="row g-3" method="post" action="/" enctype="multipart/form-data">
   <div class="col-auto">
     <label for="username" class="visually-hidden">Email</label>
@@ -30,24 +30,34 @@
 </div>
 {% endif %}
 
+{% if content == "usuario" %}
+<h2> Vista individual del usuario {{usuario[0]}}</h2>
+<p>Username: {{usuario[1]}}</p>
+<p>Contraseña: {{usuario[2]}}</p>
+{% endif %}
+
 {% if usuarios|length > 0 %}
+<h1 align="center">Lista de Usuarios</h1>
 <table class="table table-striped">
     <tr>
         <td>ID</td>
         <td>Nombre</td>
         <td>Pass</td>
+        <td>Ver</td>
     </tr>
     {% for usuario in usuarios: %}
     <tr>
         <td>{{ usuario[0] }}</td>
         <td>{{ usuario[1] }}</td>
         <td>{{ usuario[2] }}</td>
+        <td><a href="/usuarios/{{usuario[0]}}">Ver</a></td>
     </tr>
     {% endfor %}
 </table>
 {% endif %}
 
 {% if recetas|length> 0 %}
+<h1 align="center">Lista de Recetas</h1>
 <table class="table table-striped">
     <tr>
         <td>ID</td>
@@ -61,6 +71,24 @@
         <td>{{ receta[1] }}</td>
         <td>{{ receta[3] }}</td>
         <td>{{ receta[4] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% if ingredientes|length> 0 %}
+<h1 align="center">Lista de Ingredientes</h1>
+<table class="table table-striped">
+    <tr>
+        <td>ID</td>
+        <td>Nombre</td>
+        <td>Descripcion</td>
+    </tr>
+    {% for ingrediente in ingredientes: %}
+    <tr>
+        <td>{{ ingrediente[0] }}</td>
+        <td>{{ ingrediente[1] }}</td>
+        <td>{{ ingrediente[3] }}</td>
     </tr>
     {% endfor %}
 </table>

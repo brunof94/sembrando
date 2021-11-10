@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify, render_template, session
-from datos.modelos import usuario, recetas
+
+import auxiliares.funciones
+from datos.modelos import usuario, recetas, ingredientes
+from auxiliares import funciones
 
 app = Flask(__name__)
 app.secret_key = ".dasfgjhaslfgñdojuuiriuerr"
@@ -8,6 +11,8 @@ valorYaExiste = 201
 valorFaltanDatos = 202
 valorNoEsJson = 203
 valorNoEncontrado = 204
+tamanoMinClave = 5
+tamanoMinNombre = 5
 
 @app.route("/", methods=['GET','POST'])
 def index():
@@ -16,17 +21,15 @@ def index():
     if request.method == 'POST':
         _nombre = request.form.get('username')
         _clave = request.form.get('password')
-
         _datosUsuario = usuario.obtenerUsuario(_nombre)
-        print(type(_datosUsuario))
-        if len(_datosUsuario) == 0:
+        if funciones.verificarVacia(_datosUsuario):
             return render_template("index.html", content = "error", error = "Usuario no encontrado")
         elif _clave == _datosUsuario[0][2]:
             return render_template("index.html", content = "logged", user = _datosUsuario)
         else:
             return render_template("index.html", content="error", error=f"Contraseña incorrecta")
 
-
+#TO do
 @app.route("/login", methods=['POST'])
 def login():
     data = request.form
@@ -38,16 +41,15 @@ def login():
 
 
 #region endpoint usuario
-@app.route('/usuarios', methods=['POST'])
+@app.route('/usuarios/', methods=['POST'])
 def crearUsuario():
     datosUsuario = request.get_json()
     if "nombre" in datosUsuario and "clave" in datosUsuario:
-        if len(datosUsuario['nombre']) >= 5 and len(datosUsuario['clave']) >= 5 and len(usuario.obtenerUsuario(datosUsuario['nombre'])) == 0:
+        if len(datosUsuario['nombre']) >= tamanoMinNombre and len(datosUsuario['clave']) >= tamanoMinClave and not funciones.usuarioExiste(datosUsuario['nombre']):
             usuario.crearUsuario(datosUsuario['nombre'], datosUsuario['clave'])
-            print(usuario.obtenerUsuario(datosUsuario['nombre']))
-            return 'OK', 200
+            return 'Creado', 200
         else:
-            return 'Nombre o clave muy corta', 400 #chequear
+            return 'Nombre o clave muy corta o usuario ya existe', 201  #chequear
     else:
         return 'No se proporcionaron datos validos', 400
 
@@ -58,30 +60,36 @@ def obtenerUsuarios():
     if datosUsuario is not dict:
         return render_template("index.html", usuarios = usuario.obtenerUsuarios())
     else:
-        if 'nombre' in datosUsuario:
+        if 'nombre' in datosUsuario and funciones.usuarioExiste(datosUsuario['usuario']):
             return jsonify(usuario.obtenerUsuario(datosUsuario['nombre'])), 200
         else:
-            return "No se encotró", 200
+            return "No se encontró", 200
 
 
 
 @app.route('/usuarios', methods=['DELETE'])
 def borrarUsuario():
     datosUsuario = request.get_json()
-    if "id" in datosUsuario:
+    if "id" in datosUsuario and funciones.usuarioExisteID(datosUsuario["id"]):
         usuario.borrarUsuario(datosUsuario["id"])
         return "Borrado", 200
     else:
-        return "No se proporcionó una id", 200
+        return "No se proporcionó una id o no se encontro el usuario", 200
 
 
 
 @app.route('/usuarios', methods=['UPDATE'])
 def modificarUsuario():
     datosUsuario = request.get_json()
-    usuario.modificarUsuario(datosUsuario["id"],datosUsuario["nombre"], datosUsuario["clave"])
-    return "Modificado", 200
+    if 'id' in datosUsuario and 'nombre' in datosUsuario and 'clave' in datosUsuario and len(datosUsuario["nombre"]) >= tamanoMinNombre and len(datosUsuario["clave"]) >= tamanoMinClave:
+        usuario.modificarUsuario(datosUsuario["id"],datosUsuario["nombre"], datosUsuario["clave"])
+        return "Modificado", 200
 
+
+@app.route('/usuarios/<id>', methods=['GET'])
+def verUsuario(id):
+    _usuario = usuario.obtenerUsuarioId(id)
+    return render_template("index.html", content="usuario", usuario=_usuario[0])
 
 
 #endregion
@@ -92,7 +100,7 @@ def crearReceta():
     datosReceta = request.get_json()
     if type(datosReceta) is dict:
         if "nombre" in datosReceta and "descripcion" in datosReceta and "puntuacion" in datosReceta:
-            if len(recetas.obtenerReceta(datosReceta["nombre"])) == 0:
+            if funciones.verificarVacia(recetas.obtenerReceta(datosReceta["nombre"])):
                 recetas.crearReceta(datosReceta['nombre'], datosReceta['descripcion'], datosReceta['puntuacion'])
                 return "creada", valorExito
             return "nombre ya existe", valorYaExiste
@@ -105,9 +113,8 @@ def crearReceta():
 def obtenerRecetas():
     datosReceta = request.get_json()
     if type(datosReceta) is dict:
-        if len(datosReceta) > 0 and "nombre" in datosReceta:
+        if "nombre" in datosReceta:
             return jsonify(recetas.obtenerReceta(datosReceta["nombre"])), valorExito
-
     return render_template("index.html", recetas = recetas.obtenerRecetas())
 
 
@@ -116,7 +123,7 @@ def modificarRecetas():
     datosReceta = request.get_json()
     if type(datosReceta) is dict:
         if "nombre" in datosReceta and "id" in datosReceta and "descripcion" in datosReceta and "puntuacion" in datosReceta:
-            if len(recetas.obtenerRecetaID(datosReceta["id"])) > 0:
+            if not funciones.verificarVacia(recetas.obtenerRecetaID(datosReceta["id"])):
                 recetas.modificiarReceta(datosReceta["id"], datosReceta["nombre"], datosReceta["puntuacion"], datosReceta["descripcion"])
                 return "Modificado", 200
             else:
@@ -139,6 +146,14 @@ def borrarReceta():
 
 #endregion
 
+
+#region endpoint ingredientes
+@app.route("/ingredientes", methods=['GET'])
+def obtenerIngredientes():
+    return render_template("index.html", ingredientes= ingredientes.obtenerIngredientes())
+
+
+#endregion
 
 if __name__ == '__main__':
     app.debug = True
