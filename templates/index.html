@@ -4,6 +4,9 @@
 
 
 {% if content == "login" or content == "loginError" %}
+{% if content == "loginError" %}
+<h1 style="color:red">{{error}}</h1>
+{% endif %}
 <form class="row g-3" method="post" action="/" enctype="multipart/form-data">
   <div class="col-auto">
     <label for="username" class="visually-hidden">Email</label>

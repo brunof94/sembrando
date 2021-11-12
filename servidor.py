@@ -40,6 +40,7 @@ def login():
     return "ok", 200
 
 
+
 #region endpoint usuario
 @app.route('/usuarios', methods=['POST'])
 def crearUsuario():
