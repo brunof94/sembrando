@@ -23,11 +23,11 @@ def index():
         _clave = request.form.get('password')
         _datosUsuario = usuario.obtenerUsuario(_nombre)
         if funciones.verificarVacia(_datosUsuario):
-            return render_template("index.html", content = "error", error = "Usuario no encontrado")
+            return render_template("index.html", content = "loginError", error = "Usuario no encontrado")
         elif _clave == _datosUsuario[0][2]:
             return render_template("index.html", content = "logged", user = _datosUsuario)
         else:
-            return render_template("index.html", content="error", error=f"Contraseña incorrecta")
+            return render_template("index.html", content="loginError", error=f"Contraseña incorrecta")
 
 #TO do
 @app.route("/login", methods=['POST'])
@@ -41,10 +41,20 @@ def login():
 
 
 #region endpoint usuario
-@app.route('/usuarios/', methods=['POST'])
+@app.route('/usuarios', methods=['POST'])
 def crearUsuario():
-    datosUsuario = request.get_json()
-    if "nombre" in datosUsuario and "clave" in datosUsuario:
+    nombreUsuario = request.form.get('newUsername')
+    passUsuario = request.form.get('newPassword')
+    if len(nombreUsuario) >= tamanoMinNombre and len(passUsuario) >= tamanoMinClave and not funciones.usuarioExiste(nombreUsuario):
+        usuario.crearUsuario(nombreUsuario,passUsuario)
+        return render_template("index.html", usuarios = usuario.obtenerUsuarios(), exito = True, mensaje = f"Se creó el usuario {nombreUsuario}")
+    elif funciones.usuarioExiste(nombreUsuario):
+        return render_template("index.html", usuarios = usuario.obtenerUsuarios(), content = "error", error = "Usuario ya existe")
+    else:
+        return render_template("index.html", usuarios = usuario.obtenerUsuarios(), content = "error", error = "No se ingresaron datos validos")
+
+'''   
+ if "nombre" in datosUsuario and "clave" in datosUsuario:
         if len(datosUsuario['nombre']) >= tamanoMinNombre and len(datosUsuario['clave']) >= tamanoMinClave and not funciones.usuarioExiste(datosUsuario['nombre']):
             usuario.crearUsuario(datosUsuario['nombre'], datosUsuario['clave'])
             return 'Creado', 200
@@ -52,6 +62,7 @@ def crearUsuario():
             return 'Nombre o clave muy corta o usuario ya existe', 201  #chequear
     else:
         return 'No se proporcionaron datos validos', 400
+'''
 
 
 @app.route('/usuarios', methods=['GET'])
@@ -76,6 +87,11 @@ def borrarUsuario():
     else:
         return "No se proporcionó una id o no se encontro el usuario", 200
 
+
+@app.route('/usuarios/<id>/borrar', methods=['DELETE', 'GET'])
+def borrarUsuarioID(id):
+    usuario.borrarUsuario(id)
+    return render_template("index.html", usuarios=usuario.obtenerUsuarios(), exito = True, mensaje = f"Se borró el usuario {id}")
 
 
 @app.route('/usuarios', methods=['UPDATE'])
