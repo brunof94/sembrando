@@ -109,6 +109,22 @@ def verUsuario(id):
     return render_template("index.html", content="usuario", usuario=_usuario[0])
 
 
+@app.route('/usuarios/<id>/modificar', methods=['GET'])
+def modificarUsuarioVista(id):
+    _usuario = usuario.obtenerUsuarioId(id)
+    return render_template("index.html", content = "modificarUsuario", usuario = _usuario)
+
+
+@app.route('/usuarios/<id>/modificado', methods=['POST'])
+def modificarUsuarioID(id):
+    nombreUsuario = request.form.get('updatedUsername')
+    passUsuario = request.form.get('updatedPassword')
+    if funciones.usuario.obtenerUsuario(nombreUsuario): #comprobar si ya existe
+        return render_template("index.html", usuarios = usuario.obtenerUsuarios(), content = "error", error = "No se pueden repetir nombres de usuarios")
+    usuario.modificarUsuario(id, nombreUsuario, passUsuario)
+    return render_template("index.html", usuarios=usuario.obtenerUsuarios(), exito= True, mensaje = f"Se modificó el usuario {id}")
+
+
 #endregion
 
 #region endpoint recetas
@@ -160,6 +176,8 @@ def borrarReceta():
             return "Eliminado", 200
         return "No hay id", valorFaltanDatos
     return "No es un objeto JSON", valorNoEsJson
+
+
 
 #endregion
 

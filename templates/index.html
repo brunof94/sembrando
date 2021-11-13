@@ -71,6 +71,7 @@
         <td>Pass</td>
         <td>Ver</td>
         <td>Eliminar</td>
+        <td>Modificar</td>
     </tr>
     {% for usuario in usuarios: %}
     <tr>
@@ -79,9 +80,30 @@
         <td>{{ usuario[2] }}</td>
         <td><a href="/usuarios/{{usuario[0]}}">Ver</a></td>
         <td><a href="/usuarios/{{usuario[0]}}/borrar" methods="DELETE">Eliminar</a></td>
+        <td><a href="/usuarios/{{usuario[0]}}/modificar" methods="GET">Modificar</a></td>
     </tr>
     {% endfor %}
 </table>
+{% endif %}
+
+{% if content == "modificarUsuario" %}
+<p>Modificando usuario: {{usuario[0][0]}}</p>
+<p>Nombre de usuario: {{usuario[0][1]}}</p>
+<p>Contraseña: {{usuario[0][2]}}</p>
+<form class="row g-3" method="POST" action="/usuarios/{{usuario[0][0]}}/modificado" enctype="multipart/form-data">
+  <div class="col-auto">
+    <label for="updatedUsername" class="visually-hidden">Email</label>
+    <input name="updatedUsername" type="text" id="updatedUsername" class="form-control"  placeholder="Nuevo nombre de usuario" >
+  </div>
+  <div class="col-auto">
+    <label for="updatedPassword" class="visually-hidden">Password</label>
+    <input name="updatedPassword" type="password" class="form-control" id="updatedPassword" placeholder="Nueva Contraseña">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary mb-3">Modificar</button>
+  </div>
+</form>
+
 {% endif %}
 
 {% if recetas|length> 0 %}
