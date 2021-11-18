@@ -11,6 +11,7 @@ valorYaExiste = 201
 valorFaltanDatos = 202
 valorNoEsJson = 203
 valorNoEncontrado = 204
+valorClaveIncorrecta = 205
 tamanoMinClave = 5
 tamanoMinNombre = 5
 
@@ -28,6 +29,20 @@ def index():
             return render_template("index.html", content = "logged", user = _datosUsuario)
         else:
             return render_template("index.html", content="loginError", error=f"Contraseña incorrecta")
+
+@app.route("/api/login", methods=['POST'])
+def apiLogin():
+    _nombre = request.json['nombre']
+    _clave = request.json['clave']
+    _datosUsuario = usuario.obtenerUsuario(_nombre)
+    if funciones.verificarVacia(_datosUsuario): #Si no encuentra al usuario
+        return "No encontrado", 200
+    elif _clave == _datosUsuario[0][2]: #login
+        return  "Exito",200
+    else:
+        return "Contraseña incorrecta", 200 #contraseña incorrecta
+
+
 
 #TO do
 @app.route("/login", methods=['POST'])
