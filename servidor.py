@@ -15,6 +15,7 @@ valorClaveIncorrecta = 205
 tamanoMinClave = 5
 tamanoMinNombre = 5
 
+# la vista de admin solo se ingresa con el usuario admin
 @app.route("/", methods=['GET','POST'])
 def index():
     if request.method == 'GET':
@@ -22,11 +23,13 @@ def index():
     if request.method == 'POST':
         _nombre = request.form.get('username')
         _clave = request.form.get('password')
-        _datosUsuario = usuario.obtenerUsuario(_nombre)
-        if funciones.verificarVacia(_datosUsuario):
-            return render_template("index.html", content = "loginError", error = "Usuario no encontrado")
-        elif _clave == _datosUsuario[0][2]:
-            return render_template("index.html", content = "logged", user = _datosUsuario)
+        if _nombre == "admin" and _clave == "admin":
+            return render_template("index.html", content="logged", user="Admin")
+        # _datosUsuario = usuario.obtenerUsuario(_nombre)
+        # if funciones.verificarVacia(_datosUsuario):
+        #     return render_template("index.html", content = "loginError", error = "Usuario no encontrado")
+        # elif _clave == _datosUsuario[0][2]:
+        #     return render_template("index.html", content = "logged", user = _datosUsuario)
         else:
             return render_template("index.html", content="loginError", error=f"Contraseña incorrecta")
 

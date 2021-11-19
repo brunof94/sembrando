@@ -20,6 +20,7 @@
     <button type="submit" class="btn btn-primary mb-3">Ingresar</button>
   </div>
 </form>
+<p>Usuario: admin , Contraseña: admin</p>
 {% endif %}
 
 {% if usuarios|length > 0 %}
@@ -41,7 +42,7 @@
 
 {% if content == "logged"%}
 <div>
-    <h1>Bienvenido {{user[0][1]}}</h1>
+    <h1>Bienvenido {{user}}</h1>
 </div>
 {% endif %}
 
