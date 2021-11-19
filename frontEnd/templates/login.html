@@ -10,6 +10,7 @@
 <body>
 
 
+
 <form class="row g-3" style="margin: 5%;" method="post" action="/login" enctype="multipart/form-data">
     <div class="col-auto">
         <label for="username" class="visually-hidden">Email</label>
@@ -35,6 +36,11 @@
         <button type="submit" class="btn btn-primary mb-3">Ingresar</button>
     </div>
 </form>
+{% if _error == True %}
+<div><p style="color:red">ERROR: {{content}}</p></div>
+{% endif %}
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

@@ -32,15 +32,37 @@ def index():
 
 @app.route("/api/login", methods=['POST'])
 def apiLogin():
-    _nombre = request.json['nombre']
-    _clave = request.json['clave']
-    _datosUsuario = usuario.obtenerUsuario(_nombre)
-    if funciones.verificarVacia(_datosUsuario): #Si no encuentra al usuario
-        return "No encontrado", 200
-    elif _clave == _datosUsuario[0][2]: #login
-        return  "Exito",200
-    else:
-        return "Contraseña incorrecta", 200 #contraseña incorrecta
+    try:
+        _nombre = request.json['nombre']
+        _clave = request.json['clave']
+        _datosUsuario = usuario.obtenerUsuario(_nombre)
+        if funciones.verificarVacia(_datosUsuario): #Si no encuentra al usuario
+            return "No encontrado", 200
+        elif _clave == _datosUsuario[0][2]: #login
+            return  "Exito",200
+        else:
+            return "Contraseña incorrecta", 200 #contraseña incorrecta
+    except:
+        return "Bad Request", 400
+
+@app.route("/api/register", methods=['POST'])
+def apiRegister():
+    try:
+        _nombre = request.json['nombre']
+        _clave = request.json['clave']
+        _datosUsuario = usuario.obtenerUsuario(_nombre)
+
+        if len(_nombre) >= tamanoMinNombre and len(_clave) >= tamanoMinClave:
+            if funciones.verificarVacia(_datosUsuario):
+                usuario.crearUsuario(_nombre,_clave)
+                return "Exito", 200
+            else:
+                return "Ya existe", 200
+        else:
+            return "Contraseña o nombre de usuario corto", 200
+
+    except:
+        return "Bad Request", 400
 
 
 
@@ -166,6 +188,12 @@ def obtenerRecetas():
     return render_template("index.html", recetas = recetas.obtenerRecetas())
 
 
+@app.route("/api/recetas", methods=['GET'])
+def obtenerRecetasAPI():
+    _recetas = recetas.obtenerRecetas()
+    _recetas = jsonify(_recetas)
+    return _recetas, 200
+
 @app.route('/recetas', methods=['UPDATE'])
 def modificarRecetas():
     datosReceta = request.get_json()
@@ -202,7 +230,11 @@ def borrarReceta():
 def obtenerIngredientes():
     return render_template("index.html", ingredientes= ingredientes.obtenerIngredientes())
 
-
+@app.route("/api/ingredientes", methods=['GET'])
+def obtenerIngredientesAPI():
+    _ingredientes = ingredientes.obtenerIngredientes()
+    _ingredientes = jsonify(_ingredientes)
+    return _ingredientes, 200
 #endregion
 
 if __name__ == '__main__':

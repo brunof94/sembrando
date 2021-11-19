@@ -28,14 +28,11 @@
                     <a class="nav-link" href="/recetas">Recetas</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/usuarios">Usuarios</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="/ingredientes">Ingredientes</a>
                 </li>
             </ul>
             {%if session["nombre"] != "" %}
-            <p class="text-end"> Usuario : {{session["nombre"]}}</p>
+            <p class="text-end"> Usuario : {{session["nombre"]}} - <a href="/logout">Salir</a></p>
             {% endif %}
         </div>
     </div>
@@ -43,7 +40,9 @@
 
 
 <div class="content">
-    {% block content %} {% endblock %}
+    {% block content %}
+
+    {% endblock %}
 </div>
 
 <!-- Optional JavaScript; choose one of the two! -->
