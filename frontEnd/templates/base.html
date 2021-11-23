@@ -32,7 +32,7 @@
                 </li>
             </ul>
             {%if session["nombre"] != "" %}
-            <p class="text-end"> Usuario : {{session["nombre"]}} - <a href="/logout">Salir</a></p>
+            <p class="text-end"> Usuario : {{session["nombre"]}} - <a href="/usuario/modificar">Modificar</a> <a href="/logout">Salir</a></p>
             {% endif %}
         </div>
     </div>

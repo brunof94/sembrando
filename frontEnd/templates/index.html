@@ -10,6 +10,30 @@
 {% if content == "registered" %}
 <p>Usuario creado, Bienvenido {{user}}</p>
 {% endif %}
+{% if content == "claveCambiada" %}
+<p>Se modificó la contraseña satisfactoriamente</p>
+{% endif %}
+
+{% if content == "modificarUsuario" %}
+<p>Modificar contraseña</p>
+<p>ID : {{usuario[0]}}</p>
+<p>Nombre de usuario : {{usuario[1]}}</p>
+<p>Contraseña : {{usuario[2]}}</p>
+<br>
+<form method="post" action="/usuario/modificar">
+    <label for="txtClave">Nueva contraseña</label>
+    <input id="txtClave" name="txtClave">
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">Cambiar</button>
+    </div>
+</form>
+<form class="fixed-bottom" method="post" action="/usuario/eliminar">
+    <label>¿Eliminar usuario?</label>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">ELIMINAR</button>
+    </div>
+</form>
+{% endif %}
 
 {% if content == "recetas" %}
 <h1 align="center">Lista de Recetas</h1>
@@ -33,6 +57,8 @@
 
 {% if content == "ingredientes" %}
 <h1 align="center">Lista de Ingredientes</h1>
+
+
 <table class="table table-striped">
     <tr>
         <td>ID</td>
@@ -48,6 +74,9 @@
     {% endfor %}
 </table>
 {% endif %}
+
+
+
 
 
 {% endblock %}
