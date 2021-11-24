@@ -2,8 +2,8 @@ Para abrir el proyecto:
 RUN servidor.py
 RUN /frontEnd/servidorWeb.py
 
-Servidor es la vista de admin con el crud con menos restricciones
-ServidorWeb es la vista de usuario donde hay que loguearse. ejemplo usuario(bruno,12345) -> se puede obtener en la lista de usuarios del admin
+Servidor es la vista de admin con el crud con menos restricciones > no usa api, maneja localmente
+ServidorWeb es la vista de usuario donde hay que loguearse. ejemplo usuario(bruno,12345) -> se puede obtener en la lista de usuarios del admin > usa las apis de Servidor
 
 
 Funcionalidades:

@@ -40,6 +40,8 @@ def login():
 
 @app.route("/usuario/modificar", methods = ["GET", "POST"])
 def modificarUsuario():
+    if "nombre" not in session:
+        return render_template("login.html")
     if request.method == "GET":
         parametros = {'nombre': session["nombre"]}
         _usuario = requests.post(server + 'api/usuario', json=parametros)
@@ -53,6 +55,8 @@ def modificarUsuario():
 
 @app.route("/usuario/eliminar", methods = ["POST"])
 def eliminarUsuario():
+    if "nombre" not in session:
+        return render_template("login.html")
     requests.post(server + 'api/usuario/eliminar', json={'nombre': session["nombre"]})
     session.clear()
     return render_template("login.html", content="eliminado", mensaje="Se borró el usuario")
@@ -76,6 +80,8 @@ def recetas():
 
 @app.route("/recetas/<id>")
 def verReceta(id):
+    if "nombre" not in session:
+        return render_template("login.html")
     _response = requests.get(server + f"/api/receta/{id}")
     _response = _response.json()
     print(_response[1])
