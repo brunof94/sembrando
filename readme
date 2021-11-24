@@ -1,0 +1,23 @@
+Para abrir el proyecto:
+RUN servidor.py
+RUN /frontEnd/servidorWeb.py
+
+Servidor es la vista de admin con el crud con menos restricciones
+ServidorWeb es la vista de usuario donde hay que loguearse. ejemplo usuario(bruno,12345) -> se puede obtener en la lista de usuarios del admin
+
+
+Funcionalidades:
+Servidor:
+    Listado ingredientes, recetas, usuarios
+    creación, borrado y edición de usuario
+ServidorWeb:
+    Listado ingredientes y recetas
+    Logueo y registro(creación)
+    Cambiar contraseña de su propio usuario, eliminarlo, y sesiones.
+    Ver una receta con más detalles, entre ellos la lista de ingredientes.
+
+
+Nota: Los datos fueron poblados de forma alazar con el archivo poblarTablas.py
+
+
+Github: https://github.com/brunof94/sembrando
