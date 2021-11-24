@@ -1,5 +1,5 @@
 import random
-from datos.modelos import recetas, usuario, ingredientes
+from datos.modelos import recetas, usuario, ingredientes, recetaTieneIngredientes
 from random_word import RandomWords
 from datos.baseDeDatos import BaseDeDatos
 
@@ -47,9 +47,9 @@ def poblarIngredientes(numero):
             print(Exception)
 
 
-poblarUsuario(20)
-poblarRecetas(17)
-poblarIngredientes(10)
+# poblarUsuario(20)
+# poblarRecetas(17)
+# poblarIngredientes(10)
 
 def poblarCreadoresRecetas():
 
@@ -63,3 +63,20 @@ def poblarCreadoresRecetas():
     print(numeroRecetas, numeroUsuarios)
 
 #poblarCreadoresRecetas()
+
+
+def poblarIngredientesEnRecetas():
+    bd = BaseDeDatos()
+    numeroRecetas = bd.ejecutar_sql(f"SELECT COUNT(1) FROM recetas")[0][0]
+    numeroIngredientes = bd.ejecutar_sql(f"SELECT COUNT(1) FROM ingredientes")[0][0]
+    print(numeroRecetas)
+    print(numeroIngredientes)
+    for i in range(1, numeroRecetas):
+        r = random.randint(2,7)
+        for j in range(r):
+            idIngrediente = random.randint(1, numeroIngredientes)
+            recetaTieneIngredientes.crearRecetaTieneIngrediente(i,idIngrediente)
+            print(f"R{i}, I{idIngrediente}")
+
+
+poblarIngredientesEnRecetas()

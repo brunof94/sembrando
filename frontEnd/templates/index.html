@@ -35,25 +35,7 @@
 </form>
 {% endif %}
 
-{% if content == "recetas" %}
-<h1 align="center">Lista de Recetas</h1>
-<table class="table table-striped">
-    <tr>
-        <td>ID</td>
-        <td>Nombre</td>
-        <td>Puntuacion</td>
-        <td>Descripcion</td>
-    </tr>
-    {% for receta in recetas: %}
-    <tr>
-        <td>{{ receta[0] }}</td>
-        <td>{{ receta[1] }}</td>
-        <td>{{ receta[3] }}</td>
-        <td>{{ receta[4] }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %}
+
 
 {% if content == "ingredientes" %}
 <h1 align="center">Lista de Ingredientes</h1>

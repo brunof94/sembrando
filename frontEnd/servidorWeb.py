@@ -69,9 +69,17 @@ def recetas():
     if "nombre" in session:
         _response = requests.get(server + 'api/recetas')
         _response= _response.json()
-        return render_template("index.html", content = "recetas", recetas = _response)
+        return render_template("recetas.html", content = "recetas", recetas = _response)
     else:
         return render_template("login.html")
+
+
+@app.route("/recetas/<id>")
+def verReceta(id):
+    _response = requests.get(server + f"/api/receta/{id}")
+    _response = _response.json()
+    print(_response[1])
+    return render_template("recetas.html", content = "receta", receta = _response[0][0], ingredientes = _response[1])
 
 
 @app.route("/ingredientes", methods=["GET"])

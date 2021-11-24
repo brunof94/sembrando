@@ -45,13 +45,12 @@ FOREIGN KEY(usuario) REFERENCES usuarios(id)
 )
 '''
 
-sql_tabla_tieneIngredientes = '''
-CREATE TABLE tieneIngredientes(
-ingrediente INTEGER, 
-usuario  INTEGER, 
-cantidad INTEGER,
+sql_tabla_recetaTieneIngredientes = '''
+CREATE TABLE RecetaTieneIngredientes(
+receta INTEGER, 
+ingrediente  INTEGER, 
 FOREIGN KEY(ingrediente) REFERENCES ingredientes(id),
-FOREIGN KEY(usuario) REFERENCES usuarios(id)
+FOREIGN KEY(receta) REFERENCES recetas(id)
 )
 '''
 
@@ -62,12 +61,12 @@ if __name__ == '__main__':
         conexion = sqlite3.connect('../../queCenamosHoy.db')
 
         print('Creando Tablas..')
-        conexion.execute(sql_tabla_usuarios)
-        conexion.execute(sql_tabla_recetas)
-        conexion.execute(sql_tabla_ingredientes)
-        conexion.execute(sql_tabla_creadoresRecetas)
-        conexion.execute(sql_tabla_favoritos)
-        conexion.execute(sql_tabla_tieneIngredientes)
+        # conexion.execute(sql_tabla_usuarios)
+        # conexion.execute(sql_tabla_recetas)
+        # conexion.execute(sql_tabla_ingredientes)
+        # conexion.execute(sql_tabla_creadoresRecetas)
+        # conexion.execute(sql_tabla_favoritos)
+        conexion.execute(sql_tabla_recetaTieneIngredientes)
 
         conexion.close()
         print('Creacion Finalizada.')

@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template, session
 
 import auxiliares.funciones
-from datos.modelos import usuario, recetas, ingredientes
+from datos.modelos import usuario, recetas, ingredientes, recetaTieneIngredientes
 from auxiliares import funciones
 
 app = Flask(__name__)
@@ -100,18 +100,6 @@ def crearUsuario():
                                error="No se ingresaron datos validos")
 
 
-'''   
- if "nombre" in datosUsuario and "clave" in datosUsuario:
-        if len(datosUsuario['nombre']) >= tamanoMinNombre and len(datosUsuario['clave']) >= tamanoMinClave and not funciones.usuarioExiste(datosUsuario['nombre']):
-            usuario.crearUsuario(datosUsuario['nombre'], datosUsuario['clave'])
-            return 'Creado', 200
-        else:
-            return 'Nombre o clave muy corta o usuario ya existe', 201  #chequear
-    else:
-        return 'No se proporcionaron datos validos', 400
-'''
-
-
 @app.route('/usuarios', methods=['GET'])
 def obtenerUsuarios():
     datosUsuario = request.get_json()
@@ -141,7 +129,7 @@ def borrarUsuarioID(id):
                            mensaje=f"Se borró el usuario {id}")
 
 
-@app.route('/api/usuario', methods = ["POST"])
+@app.route('/api/usuario', methods=["POST"])
 def obtenerUsuarioNombreAPI():
     try:
         nombre = request.get_json()["nombre"]
@@ -165,12 +153,14 @@ def modificarUsuario():
         print(Exception)
         return "Bad request", 400
 
-@app.route('/api/usuario/eliminar', methods = ["POST"])
+
+@app.route('/api/usuario/eliminar', methods=["POST"])
 def eliminarUsuarioAPI():
     datosUsuario = request.get_json()
     _usuario = usuario.obtenerUsuario(datosUsuario["nombre"])[0]
     usuario.borrarUsuario(_usuario[0])
     return "Eliminado", 200
+
 
 @app.route('/usuarios/<id>', methods=['GET'])
 def verUsuario(id):
@@ -227,6 +217,17 @@ def obtenerRecetasAPI():
     _recetas = recetas.obtenerRecetas()
     _recetas = jsonify(_recetas)
     return _recetas, 200
+
+
+@app.route("/api/receta/<id>")
+def obtenerRecetaAPI(id):
+    _receta = recetas.obtenerRecetaID(id)
+    _ingredientesID = recetaTieneIngredientes.obtenerIngredientesDeReceta(id)
+    _ingredientes = []
+    for ingrediente in _ingredientesID:
+        i = ingredientes.obtenerIngredienteID(ingrediente[1])
+        _ingredientes.append(i)
+    return jsonify([_receta, _ingredientes]), 200
 
 
 @app.route('/recetas', methods=['UPDATE'])

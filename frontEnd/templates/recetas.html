@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if content == "recetas" %}
+
+<h1 align="center">Lista de Recetas</h1>
+<table class="table table-striped">
+    <tr>
+        <td>ID</td>
+        <td>Nombre</td>
+        <td>Puntuacion</td>
+        <td>Descripcion</td>
+        <td></td>
+    </tr>
+    {% for receta in recetas: %}
+    <tr>
+        <td>{{ receta[0] }}</td>
+        <td>{{ receta[1] }}</td>
+        <td>{{ receta[3] }}</td>
+        <td>{{ receta[4] }}</td>
+        <td><a href="/recetas/{{receta[0]}}">Ver</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+
+{% if content == "receta" %}
+<p>ID: {{receta[0]}}</p>
+<p>Nombre: {{receta[1]}}</p>
+<p>Puntuación: {{receta[3]}}</p>
+<p>Descripción: {{receta[4]}}</p>
+<br><br>
+<p>Ingredientes:</p>
+{% for ingrediente in ingredientes %}
+    <p>{{ingrediente[0][1]}}</p>
+{% endfor %}
+{% endif %}
+
+{% endblock %}
